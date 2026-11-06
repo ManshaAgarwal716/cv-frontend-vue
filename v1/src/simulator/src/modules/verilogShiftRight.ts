@@ -85,7 +85,8 @@ export default class verilogShiftRight extends CircuitElement {
     if (this.isResolvable() === false) {
       return;
     }
-    const output1 = this.inp1.value >> this.shiftInp.value;
+    // JavaScript wraps shift counts modulo 32; all supported signals are at most 32 bits.
+    const output1 = this.shiftInp.value >= 32 ? 0 : this.inp1.value >>> this.shiftInp.value;
 
     this.output1.value = (output1 << (32 - this.outputBitWidth)) >>> (32 - this.outputBitWidth);
     simulationArea.simulationQueue.add(this.output1 as QueueObject);
